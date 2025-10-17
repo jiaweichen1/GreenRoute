@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GreenRoute — Share rides. Save money. Cut emissions.</title>
+  <meta name="description" content="GreenRoute connects nearby drivers and riders to share daily commutes — saving fuel, reducing traffic, and building community." />
+  <meta name="theme-color" content="#2f9e44" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #3a6d47;
+      --card: #0f1411;
+      --muted: #9fb3a5;
+      --text: #e8f3ec;
+      --accent: #2f9e44; /* primary green */
+      --accent-2: #a3e635; /* lime for highlights */
+      --ring: rgba(163, 230, 53, .35);
+      --border: rgba(255,255,255,.08);
+      --shadow: 0 20px 50px rgba(0,0,0,.35);
+      --radius: 18px;
+      --maxw: 1100px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0; padding:0; background:var(--bg); color:var(--text); font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;}
+    a{color:inherit; text-decoration:none}
+    img{max-width:100%; display:block}
+    .container{width:100%; max-width:var(--maxw); margin-inline:auto; padding:0 20px}
+
+    /* Header */
+    header{position:sticky; top:0; z-index:50; backdrop-filter:saturate(160%) blur(8px); background:linear-gradient(180deg, rgba(11,15,12,.9), rgba(11,15,12,.35)); border-bottom:1px solid var(--border)}
+    .nav{display:flex; align-items:center; justify-content:space-between; height:64px}
+    .brand{display:flex; gap:10px; align-items:center; font-weight:700; letter-spacing:.2px}
+    .brand .logo{width:28px; height:28px; display:inline-grid; place-items:center; border-radius:8px; background:radial-gradient(120% 120% at 10% 10%, var(--accent-2), var(--accent)); box-shadow:0 8px 24px rgba(47,158,68,.35)}
+    .brand span{font-weight:700}
+    .nav a.btn{margin-left:14px}
+
+    /* Buttons */
+    .btn{display:inline-flex; align-items:center; justify-content:center; gap:.5rem; padding:.8rem 1.1rem; border-radius:999px; border:1px solid var(--border); background:#121813; color:var(--text); font-weight:600; box-shadow:inset 0 0 0 1px rgba(255,255,255,.02)}
+    .btn.primary{background:linear-gradient(180deg, #34d399, #059669); border-color:transparent; color:#05130a; box-shadow:0 8px 30px rgba(16,185,129,.35)}
+    .btn.primary:hover{transform:translateY(-1px); box-shadow:0 12px 32px rgba(16,185,129,.45)}
+    .btn:hover{opacity:.95}
+
+    /* Hero */
+    .hero{position:relative; overflow:hidden; padding:72px 0 36px; border-bottom:1px solid var(--border);}
+    .grid{display:grid; grid-template-columns:1.2fr 1fr; gap:48px; align-items:center}
+    .hero h1{font-size:clamp(32px, 5vw, 56px); line-height:1.05; margin:0 0 16px}
+    .hero p{font-size:1.125rem; color:var(--muted); max-width:60ch}
+    .meta{display:flex; gap:16px; align-items:center; margin-top:22px}
+    .meta .pill{display:inline-flex; gap:.5rem; align-items:center; padding:.5rem .8rem; border-radius:999px; background:#122016; border:1px solid var(--border); color:#bfe9cf}
+
+    /* Phone mock */
+    .phone{position:relative; width:min(360px, 85%); height:680px; margin:20px auto; border-radius:38px; border:1px solid #1f2b23; background:linear-gradient(180deg,#0e140f,#0a120c); box-shadow:var(--shadow);}
+    .phone:before{content:""; position:absolute; inset:10px; border-radius:32px; background:#0b120c; border:1px solid #1c2a20}
+    .screen{position:absolute; inset:18px; border-radius:28px; overflow:hidden; background:linear-gradient(180deg, #0e1a12, #0a150e)}
+    .statusbar{height:34px; background:rgba(255,255,255,.03); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:.8rem; color:#b7d7c6}
+    .map{position:relative; height:260px; background:
+      radial-gradient(120% 80% at 10% 10%, rgba(163,230,53,.15), transparent),
+      radial-gradient(80% 80% at 90% 20%, rgba(34,197,94,.18), transparent),
+      linear-gradient(180deg, #0a1110, #0b120f);
+      border-bottom:1px solid var(--border);
+    }
+    .route{position:absolute; left:20px; right:20px; top:30px; bottom:30px;}
+    .route svg{width:100%; height:100%}
+    .card{padding:14px 16px; border-bottom:1px solid var(--border)}
+    .card h4{margin:0 0 6px; font-size:1rem}
+    .row{display:flex; gap:10px; align-items:center; color:#cfe8d9; font-size:.95rem}
+    .dot{width:10px; height:10px; border-radius:999px}
+    .dot.start{background:#22c55e}
+    .dot.end{background:#a3e635}
+    .cta-bar{position:absolute; left:0; right:0; bottom:0; padding:14px; background:rgba(255,255,255,.02); border-top:1px solid var(--border); display:flex; gap:10px}
+    .cta-bar .btn{flex:1}
+
+    /* Sections */
+    section{padding:72px 0; border-bottom:1px solid var(--border)}
+    h2{font-size:clamp(24px, 3.5vw, 36px); margin:0 0 16px}
+    .sub{color:var(--muted); margin:0 0 30px}
+
+    .features{display:grid; grid-template-columns:repeat(3, 1fr); gap:20px}
+    .feature{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow)}
+    .feature h3{margin:12px 0 8px; font-size:1.1rem}
+    .feature p{margin:0; color:#c9e0d3}
+
+    .how{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+    .step{background:linear-gradient(180deg, rgba(163,230,53,.06), rgba(34,197,94,.04)); border:1px solid var(--border); border-radius:var(--radius); padding:20px}
+    .step .num{width:32px; height:32px; border-radius:999px; background:#122016; border:1px solid var(--border); display:inline-grid; place-items:center; font-weight:700; color:#a3e635}
+
+    .cta{display:grid; grid-template-columns:1.2fr .8fr; gap:28px; align-items:center}
+    form{display:flex; gap:10px; flex-wrap:wrap}
+    input[type=email], input[type=text]{
+      flex:1 1 260px; padding:14px 16px; font-size:1rem; border-radius:999px; border:1px solid var(--border); background:#0f1511; color:var(--text); outline:none;
+      box-shadow:0 0 0 0 var(--ring);
+    }
+    input:focus{box-shadow:0 0 0 6px var(--ring); border-color:transparent}
+
+    .badges{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+    .badge{padding:.45rem .7rem; border:1px solid var(--border); border-radius:999px; background:#0f1511; color:#bfe9cf; font-size:.9rem}
+
+    /* Footer */
+    footer{padding:40px 0; color:#a7c6b7}
+    .foot{display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap}
+    .links{display:flex; gap:16px; flex-wrap:wrap}
+    .links a{opacity:.9}
+
+    /* Responsive */
+    @media (max-width: 950px){
+      .grid{grid-template-columns:1fr;}
+      .cta{grid-template-columns:1fr}
+      .features, .how{grid-template-columns:1fr;}
+      .phone{height:640px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav" role="navigation" aria-label="Primary">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 14c4-6 12-6 16 0" stroke="#06280f" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="8" cy="17" r="2.5" fill="#0a3618"/>
+            <circle cx="16" cy="17" r="2.5" fill="#0a3618"/>
+          </svg>
+        </div>
+        <span>GreenRoute</span>
+      </div>
+      <nav class="links" aria-label="Site">
+        <a href="#how">How it works</a>
+        <a href="#benefits">Why GreenRoute</a>
+        <a href="#safety">Safety</a>
+        <a class="btn primary" href="#join">Join the waitlist</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container grid">
+        <div>
+          <h1>Share rides. Save money. <span style="white-space:nowrap">Cut emissions.</span></h1>
+          <p>GreenRoute connects nearby drivers and riders to share daily commutes — saving fuel, reducing traffic, and building community.</p>
+          <div class="meta">
+            <div class="pill" aria-label="Eco friendly"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12c6-8 12-8 14-8-2 6-6 12-12 14" stroke="#86efac" stroke-width="2" stroke-linecap="round"/></svg> Greener commutes</div>
+            <div class="pill" aria-label="Cost saving"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 12h8M6 8h12M6 16h10" stroke="#bbf7d0" stroke-width="2" stroke-linecap="round"/></svg> Split costs</div>
+            <div class="pill" aria-label="Trusted"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z" stroke="#a7f3d0" stroke-width="2"/></svg> Trusted groups</div>
+          </div>
+          <div class="badges" style="margin-top:20px">
+            <span class="badge">Campus & Workplace pilots</span>
+            <span class="badge">Invite-only communities</span>
+            <span class="badge">No phone numbers shared</span>
+          </div>
+          <p style="margin-top:26px"><a class="btn primary" href="#join" aria-label="Join the waitlist">Join the waitlist</a> <a class="btn" href="#how" aria-label="Learn how it works">How it works</a></p>
+        </div>
+        <div aria-hidden="true">
+          <div class="phone" role="img" aria-label="App mockup">
+            <div class="screen">
+              <div class="statusbar">GreenRoute — Demo</div>
+              <div class="map">
+                <div class="route">
+                  <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                    </defs>
+                    <!-- Path -->
+                    <path d="M30 220 C 90 170, 120 120, 180 110 S 300 90, 360 40" stroke="#22c55e" stroke-width="5" fill="none" filter="url(#glow)"/>
+                    <!-- Start -->
+                    <circle cx="30" cy="220" r="8" fill="#22c55e"/>
+                    <!-- Waypoints -->
+                    <circle cx="150" cy="130" r="5" fill="#a3e635"/>
+                    <circle cx="220" cy="100" r="5" fill="#a3e635"/>
+                    <!-- End -->
+                    <circle cx="360" cy="40" r="8" fill="#a3e635"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="card">
+                <h4>Morning commute</h4>
+                <div class="row"><span class="dot start"></span> From: Maple St. & 5th</div>
+                <div class="row"><span class="dot end"></span> To: Tech Park, Bldg A</div>
+              </div>
+              <div class="card">
+                <div class="row">Depart window: <strong style="margin-left:6px">8:00–8:30 AM</strong></div>
+                <div class="row">Detour estimate: <strong style="margin-left:6px">~6 min</strong></div>
+              </div>
+              <div class="cta-bar">
+                <a class="btn" href="#">Share trip</a>
+                <a class="btn primary" href="#">Request seat</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="how">
+      <div class="container">
+        <h2>How it works</h2>
+        <p class="sub">Enter your route and time window. GreenRoute matches drivers and riders heading the same way.</p>
+        <div class="how">
+          <div class="step">
+            <span class="num">1</span>
+            <h3>Offer or request a ride</h3>
+            <p>Origin, destination, and a flexible time window — that’s it.</p>
+          </div>
+          <div class="step">
+            <span class="num">2</span>
+            <h3>Get matched automatically</h3>
+            <p>We score nearby routes by proximity and timing to suggest the best fit.</p>
+          </div>
+          <div class="step">
+            <span class="num">3</span>
+            <h3>Ride together</h3>
+            <p>Confirm the match, chat in-app, and roll. Cheaper, cleaner, easier.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Benefits -->
+    <section id="benefits">
+      <div class="container">
+        <h2>Why GreenRoute?</h2>
+        <p class="sub">Designed for everyday commutes and built around trust.</p>
+        <div class="features">
+          <article class="feature">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12c6-8 12-8 14-8-2 6-6 12-12 14" stroke="#86efac" stroke-width="2" stroke-linecap="round"/></svg>
+            <h3>Eco‑friendly</h3>
+            <p>Reduce CO₂ with every shared trip. Track impact for your team or campus.</p>
+          </article>
+          <article class="feature">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 12h8M6 8h12M6 16h10" stroke="#bbf7d0" stroke-width="2" stroke-linecap="round"/></svg>
+            <h3>Save money</h3>
+            <p>Split fuel and parking costs fairly. No complicated payments required.</p>
+          </article>
+          <article class="feature">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z" stroke="#a7f3d0" stroke-width="2"/></svg>
+            <h3>Trusted groups</h3>
+            <p>Limit to your campus or workplace for higher trust and better matches.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Safety -->
+    <section id="safety">
+      <div class="container">
+        <h2>Safety & trust</h2>
+        <p class="sub">Simple, transparent features that help everyone feel comfortable.</p>
+        <div class="features">
+          <article class="feature">
+            <h3>Verified users</h3>
+            <p>Email or SMS verification. For pilots, require a .edu or company email.</p>
+          </article>
+          <article class="feature">
+            <h3>Share-trip links</h3>
+            <p>Share your live trip link with a friend or family member in one tap.</p>
+          </article>
+          <article class="feature">
+            <h3>Privacy by default</h3>
+            <p>Pickup pins snap to nearby landmarks — never expose precise home addresses.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA / Waitlist -->
+    <section id="join">
+      <div class="container cta">
+        <div>
+          <h2>Be the first to ride green</h2>
+          <p class="sub">Join the early access list for campus and workplace pilots.</p>
+          <form aria-label="Join waitlist" action="#" method="post">
+            <label class="sr-only" for="name">Name</label>
+            <input id="name" name="name" type="text" placeholder="Your name" autocomplete="name" required>
+            <label class="sr-only" for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="you@school.edu" autocomplete="email" required>
+            <button class="btn primary" type="submit">Join the waitlist</button>
+          </form>
+          <p style="color:#a7c6b7; font-size:.95rem; margin-top:10px">By joining, you agree to receive a single email when GreenRoute pilots open in your area.</p>
+        </div>
+        <div>
+          <div class="feature" style="height:100%">
+            <h3 style="margin-top:0">Pilot-ready toolkit</h3>
+            <ul style="margin:8px 0 0 18px; line-height:1.9">
+              <li>Invite-only communities</li>
+              <li>Simple time-window matching</li>
+              <li>In-app chat</li>
+              <li>Share-trip & SOS</li>
+            </ul>
+            <p style="margin-top:14px; color:#c9e0d3">Want to pilot at your school or office? <a href="#" style="text-decoration:underline">Contact us</a>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container foot">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <span>GreenRoute</span>
+      </div>
+      <div class="links">
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <a href="#">Privacy</a>
+      </div>
+      <small>© 2025 GreenRoute</small>
+    </div>
+  </footer>
+
+  <!-- Accessibility helper: screen-reader-only class -->
+  <style>
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  </style>
+</body>
+</html>
