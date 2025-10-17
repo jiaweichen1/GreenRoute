@@ -3,87 +3,156 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login Page</title>
+  <title>GreenRoute — Login</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      background-color: #3a6d47; /* Green background */
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
+    :root{
+      --bg: #3a6d47;
+      --card: #0f1411;
+      --muted: #9fb3a5;
+      --text: #e8f3ec;
+      --accent: #2f9e44;
+      --accent-2: #a3e635;
+      --ring: rgba(163, 230, 53, .35);
+      --border: rgba(255,255,255,.08);
+      --shadow: 0 20px 50px rgba(0,0,0,.35);
+      --radius: 18px;
+      --maxw: 1100px;
     }
 
-    .login-container {
-      background: white;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      width: 300px;
-      text-align: center;
-    }
+    *{box-sizing:border-box}
+    html,body{margin:0; padding:0; background:var(--bg); color:var(--text); font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;}
+    a{color:inherit; text-decoration:none}
+    .container{width:100%; max-width:var(--maxw); margin-inline:auto; padding:0 20px}
 
-    h2 {
-      margin-bottom: 20px;
-      color: #333;
-    }
+    /* Header (minimal) */
+    header{padding:18px 0}
+    .brand{display:flex; gap:10px; align-items:center; font-weight:700; letter-spacing:.2px}
+    .brand .logo{width:28px; height:28px; display:inline-grid; place-items:center; border-radius:8px; background:radial-gradient(120% 120% at 10% 10%, var(--accent-2), var(--accent)); box-shadow:0 8px 24px rgba(47,158,68,.35)}
 
-    input[type="text"],
-    input[type="password"] {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
-    }
+    /* Auth layout */
+    .auth{min-height:calc(100vh - 56px); display:grid; place-items:center; padding:40px 0}
+    .auth-card{width:min(520px, 92%); background:var(--card); border:1px solid var(--border); border-radius:24px; box-shadow:var(--shadow); padding:32px}
+    .auth-card h1{margin:0 0 10px; font-size:1.8rem}
+    .auth-card p.sub{margin:0 0 22px; color:var(--muted)}
 
-    button {
-      background-color: #000; /* Black button */
-      color: white;
-      border: none;
-      padding: 10px;
-      width: 100%;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.3s;
+    /* Inputs */
+    form{display:flex; flex-direction:column; gap:12px}
+    label{font-size:.95rem; color:#cfe8d9}
+    input[type=text], input[type=password]{
+      padding:14px 16px; font-size:1rem; border-radius:999px; border:1px solid var(--border); background:#0f1511; color:var(--text); outline:none;
+      box-shadow:0 0 0 0 var(--ring); transition:all 0.3s ease;
     }
+    input:focus{box-shadow:0 0 0 6px var(--ring); border-color:var(--accent); background:#121a15}
+    input:hover{border-color:rgba(163,230,53,0.3); background:#111a14}
 
-    button:hover {
-      background-color: #333;
-    }
+    /* Buttons */
+    .actions{display:flex; gap:10px; align-items:center; margin-top:6px}
+    .btn{display:inline-flex; align-items:center; justify-content:center; gap:.5rem; padding:.9rem 1.1rem; border-radius:999px; border:1px solid var(--border); background:#121813; color:var(--text); font-weight:600; box-shadow:inset 0 0 0 1px rgba(255,255,255,.02); cursor:pointer; position:relative; overflow:hidden; width:100%}
+    .btn.primary{background:linear-gradient(180deg, #34d399, #059669); border-color:transparent; color:#05130a; box-shadow:0 8px 30px rgba(16,185,129,.35)}
+    .btn.primary:hover{transform:translateY(-2px); box-shadow:0 12px 32px rgba(16,185,129,.45)}
+    .btn:hover{opacity:.95; transform:translateY(-1px)}
+    .btn:active{transform:translateY(0)}
 
-    .signup-link {
-      margin-top: 12px;
-      display: block;
-      font-size: 14px;
-      color: #333;
-    }
-
-    .signup-link a {
-      color: black;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .signup-link a:hover {
-      text-decoration: underline;
-    }
+    .meta{display:flex; justify-content:space-between; align-items:center; margin-top:10px; color:var(--muted); font-size:.95rem}
+    .meta a{color:var(--accent-2)}
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <h2>Login</h2>
-    <form>
-      <input type="text" placeholder="Username" required />
-      <input type="password" placeholder="Password" required />
-      <button type="submit">Login</button>
-    </form>
-    <div class="signup-link">
-      Don’t have an account? <a href="#">Sign up</a>
+  <header>
+    <div class="container">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 14c4-6 12-6 16 0" stroke="#06280f" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="8" cy="17" r="2.5" fill="#0a3618"/>
+            <circle cx="16" cy="17" r="2.5" fill="#0a3618"/>
+          </svg>
+        </div>
+        <span>GreenRoute</span>
+      </div>
     </div>
-  </div>
+  </header>
+
+  <main>
+    <section class="auth">
+      <div class="auth-card">
+        <h1>Welcome back</h1>
+        <p class="sub">Log in to continue sharing rides and saving emissions.</p>
+        <form id="login-form">
+          <div>
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" placeholder="yourname" required />
+          </div>
+          <div>
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" placeholder="••••••••" required />
+          </div>
+          <div class="actions">
+            <button class="btn primary" type="submit">Log in</button>
+          </div>
+        </form>
+        <div class="meta">
+          <span>New here? <a href="landing.html">Go to landing</a></span>
+          <a href="#">Forgot password?</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Login form handling
+    document.querySelector('#login-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const usernameInput = this.querySelector('input[name="username"]');
+      const passwordInput = this.querySelector('input[name="password"]');
+      const originalText = submitBtn.textContent;
+      
+      submitBtn.textContent = 'Logging in...';
+      submitBtn.disabled = true;
+      
+      try {
+        const response = await fetch('http://localhost:8080/api/auth/signin', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: usernameInput.value,
+            password: passwordInput.value
+          })
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data));
+          
+          submitBtn.textContent = 'Success!';
+          submitBtn.style.background = 'linear-gradient(180deg, #22c55e, #16a34a)';
+          
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 800);
+        } else {
+          let msg = 'Login failed';
+          try { const err = await response.json(); msg = err.message || msg; } catch {}
+          throw new Error(msg);
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        submitBtn.textContent = 'Login Failed';
+        submitBtn.style.background = 'linear-gradient(180deg, #ef4444, #dc2626)';
+        
+        setTimeout(() => {
+          submitBtn.textContent = originalText;
+          submitBtn.disabled = false;
+          submitBtn.style.background = '';
+        }, 1500);
+      }
+    });
+  </script>
 </body>
 </html>

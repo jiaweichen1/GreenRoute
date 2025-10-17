@@ -239,7 +239,7 @@
         <a href="#how">How it works</a>
         <a href="#benefits">Why GreenRoute</a>
         <a href="#safety">Safety</a>
-        <a class="btn primary" href="#join">Join the waitlist</a>
+        <a class="btn primary" href="login.html">Log in/ Sign up</a>
       </nav>
     </div>
   </header>
@@ -261,7 +261,7 @@
             <span class="badge">Invite-only communities</span>
             <span class="badge">No phone numbers shared</span>
           </div>
-          <p style="margin-top:26px"><a class="btn primary" href="#join" aria-label="Join the waitlist">Join the waitlist</a> <a class="btn" href="#how" aria-label="Learn how it works">How it works</a></p>
+          <p style="margin-top:26px"><a class="btn primary" href="login.html" aria-label="Join the waitlist">Login/ Sign up</a> <a class="btn" href="#how" aria-label="Learn how it works">How it works</a></p>
         </div>
         <div aria-hidden="true">
           <div class="phone" role="img" aria-label="App mockup">
@@ -535,27 +535,58 @@
       });
     });
 
+    // Ensure login link redirects
+    document.querySelectorAll('a[href="login.html"]').forEach(link => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        window.location.href = 'login.html';
+      });
+    });
+
     // Form submission handling
-    document.querySelector('form[aria-label="Join waitlist"]').addEventListener('submit', function(e) {
+    document.querySelector('form[aria-label="Join waitlist"]').addEventListener('submit', async function(e) {
       e.preventDefault();
       const submitBtn = this.querySelector('button[type="submit"]');
       const originalText = submitBtn.textContent;
+      const nameInput = this.querySelector('input[name="name"]');
+      const emailInput = this.querySelector('input[name="email"]');
       
       submitBtn.textContent = 'Joining...';
       submitBtn.disabled = true;
       
-      // Simulate API call
-      setTimeout(() => {
-        submitBtn.textContent = 'Joined!';
-        submitBtn.style.background = 'linear-gradient(180deg, #22c55e, #16a34a)';
+      try {
+        const response = await fetch('http://localhost:8080/api/trips/waitlist', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: `email=${encodeURIComponent(emailInput.value)}&name=${encodeURIComponent(nameInput.value)}`
+        });
+        
+        if (response.ok) {
+          submitBtn.textContent = 'Joined!';
+          submitBtn.style.background = 'linear-gradient(180deg, #22c55e, #16a34a)';
+          
+          setTimeout(() => {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            submitBtn.style.background = '';
+            this.reset();
+          }, 2000);
+        } else {
+          throw new Error('Failed to join waitlist');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        submitBtn.textContent = 'Error - Try Again';
+        submitBtn.style.background = 'linear-gradient(180deg, #ef4444, #dc2626)';
         
         setTimeout(() => {
           submitBtn.textContent = originalText;
           submitBtn.disabled = false;
           submitBtn.style.background = '';
-          this.reset();
         }, 2000);
-      }, 1000);
+      }
     });
   </script>
 </body>
